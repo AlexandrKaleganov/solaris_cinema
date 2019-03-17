@@ -56,9 +56,7 @@ public class Cell {
             return false;
         }
         Cell cell = (Cell) o;
-        return Objects.equals(id, cell.id) &&
-                Objects.equals(row, cell.row) &&
-                Objects.equals(place, cell.place);
+        return Objects.equals(id, cell.id) && Objects.equals(row, cell.row) && Objects.equals(place, cell.place);
     }
 
     @Override
