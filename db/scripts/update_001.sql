@@ -1,9 +1,9 @@
 create table if not exists  halls(
 id serial primary key,
-place integer,
-row integer
+row integer,
+place integer
 );
-insert into halls(place, row) values(1,1), (1,2), (1,3),(2,1), (2,2), (2,3),(3,1), (3,2), (3,3);
+insert into halls(row, place) values(1,1), (1,2), (1,3),(2,1), (2,2), (2,3),(3,1), (3,2), (3,3);
 create table if not exists  accounts(
 id serial primary key,
 name varchar(200),
