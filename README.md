@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/AlexandrKaleganov/solaris_cinema.svg?branch=master)](https://travis-ci.org/AlexandrKaleganov/solaris_cinema)
 [![codecov](https://codecov.io/gh/AlexandrKaleganov/solaris_cinema/branch/master/graph/badge.svg)](https://codecov.io/gh/AlexandrKaleganov/solaris_cinema)
+
 #solaris_cinema
 
 В этом задании вам нужно разработать простой веб сайт по покупки билетов в кинотеатр.
