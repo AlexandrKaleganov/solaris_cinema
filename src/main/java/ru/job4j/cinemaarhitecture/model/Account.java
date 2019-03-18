@@ -2,6 +2,9 @@ package ru.job4j.cinemaarhitecture.model;
 
 import java.util.Objects;
 
+/**
+ * модель аккаунт имя, телефон id
+ */
 public class Account {
     private Integer id;
     private String name;
