@@ -12,6 +12,7 @@ import ru.job4j.cinemaarhitecture.model.Ticket;
 
 import java.io.InputStream;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class DbStore implements Store, AutoCloseable {
@@ -41,7 +42,7 @@ public class DbStore implements Store, AutoCloseable {
         }
     }
 
-    private Integer updateInfo(String command, List<Object> att) {
+    private Integer updateInfo(String command, List<Object> att) throws Exception {
         return this.db(command, att, ps -> {
             Integer k = 0;
             ps.executeUpdate();
@@ -50,13 +51,14 @@ public class DbStore implements Store, AutoCloseable {
                     k = resultSet.getInt(1);
                 }
             } catch (SQLException e) {
-                throw new SQLException();
+                LOGGER.error(e.getMessage(), e);
+                conn.rollback();
             }
             return k;
         }).get();
     }
 
-    private void updateInfo(String command) {
+    private void updateInfo(String command) throws Exception {
         this.db(command, new ArrayList<>(), ps ->
                 ps.executeUpdate()
         );
@@ -70,7 +72,7 @@ public class DbStore implements Store, AutoCloseable {
      * @param att
      * @return
      */
-    private Integer isIndex(String command, List<Object> att) {
+    private Integer isIndex(String command, List<Object> att) throws Exception {
         return this.db(command, att, ps -> {
             Integer k = 0;
             try (ResultSet resultSet = ps.executeQuery()) {
@@ -94,13 +96,19 @@ public class DbStore implements Store, AutoCloseable {
      * @return
      */
 
-    private <R> Optional<R> db(String sql, List<Object> param, FunEx<PreparedStatement, R> fun) {
+    private <R> Optional<R> db(String sql, List<Object> param, FunEx<PreparedStatement, R> fun) throws Exception {
         Optional<R> rsl = Optional.empty();
         try (PreparedStatement pr = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             this.forIdex(param, (index, value) -> dispat.get(value.getClass()).accept(index + 1, pr, value));
             rsl = Optional.ofNullable(fun.apply(pr));
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
+            try {
+                conn.rollback();
+                throw new SQLException();
+            } catch (SQLException e1) {
+                LOGGER.error(e.getMessage());
+            }
         }
         return rsl;
     }
@@ -132,7 +140,7 @@ public class DbStore implements Store, AutoCloseable {
      * @return
      */
     @Override
-    public Cell getCellID(Cell cell) {
+    public Cell getCellID(Cell cell) throws Exception {
         cell.setId(this.isIndex("select * from halls where row = ? and  place = ?",
                 Arrays.asList(cell.getRow(), cell.getPlace())));
         return cell;
@@ -146,7 +154,7 @@ public class DbStore implements Store, AutoCloseable {
      * @return
      */
     @Override
-    public Account addAccount(Account account) {
+    public Account addAccount(Account account) throws Exception {
         account.setId(this.isIndex("select * from accounts where name=? and telephone = ?",
                 Arrays.asList(account.getName(), account.getTel())));
         if (account.getId() == 0) {
@@ -163,7 +171,7 @@ public class DbStore implements Store, AutoCloseable {
      * @return
      */
     @Override
-    public boolean isCheckedCell(Cell cell) {
+    public boolean isCheckedCell(Cell cell) throws Exception {
         boolean rsl = false;
         Integer test = this.isIndex("select * from purchased_seats where halls_id = ?",
                 Arrays.asList(this.getCellID(cell).getId()));
@@ -179,7 +187,7 @@ public class DbStore implements Store, AutoCloseable {
      * @return
      */
     @Override
-    public ArrayList<Cell> getListCell() {
+    public ArrayList<Cell> getListCell() throws Exception {
         return this.db("select * from halls where id in (select halls_id from purchased_seats)", new ArrayList<>(), ps -> {
             ArrayList<Cell> rsl = new ArrayList<>();
             try (ResultSet rs = ps.executeQuery()) {
@@ -194,22 +202,26 @@ public class DbStore implements Store, AutoCloseable {
         }).get();
     }
 
+    /**
+     * в случае возникновения ошибки будет происходить откат действий
+     *
+     * @param ticket
+     * @return
+     * @throws Err
+     */
     @Override
     public Ticket addTicket(Ticket ticket) throws Err {
         try {
             ticket.getCell().setId(this.getCellID(ticket.getCell()).getId());
             ticket.getAccoun().setId(this.addAccount(ticket.getAccoun()).getId());
-            if (!this.isCheckedCell(ticket.getCell())) {
-                this.updateInfo("insert into purchased_seats(accounts_id, halls_id) values(?, ?)",
-                        Arrays.asList(ticket.getAccoun().getId(), ticket.getCell().getId()));
-                conn.commit();
-            } else {
-                this.conn.rollback();
-                throw new Err("место уже занято");
-            }
-        } catch (SQLException e) {
+            this.updateInfo("insert into purchased_seats(accounts_id, halls_id) values(?, ?)",
+                    Arrays.asList(ticket.getAccoun().getId(), ticket.getCell().getId()));
+            conn.commit();
+        } catch (Exception e) {
             try {
                 conn.rollback();
+                LOGGER.error(e.getMessage(), e);
+                throw new Err("место уже занято");
             } catch (SQLException e1) {
                 LOGGER.error(e.getMessage(), e);
                 throw new Err("место уже занято");
@@ -225,7 +237,7 @@ public class DbStore implements Store, AutoCloseable {
      * @return
      */
     @Override
-    public Account getAccount(Account acoun) {
+    public Account getAccount(Account acoun) throws Exception {
         acoun.setId(this.isIndex("select * from accounts where name = ? and telephone = ?",
                 Arrays.asList(acoun.getName(), acoun.getTel())));
         return acoun;
