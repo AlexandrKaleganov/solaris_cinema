@@ -224,7 +224,7 @@ public class DbStore implements Store, AutoCloseable {
                 throw new Err("место уже занято");
             } catch (SQLException e1) {
                 LOGGER.error(e.getMessage(), e);
-                throw new Err("место уже занято");
+                throw new Err("Ща воообще что-то не понятное произошло");
             }
         }
         return ticket;
