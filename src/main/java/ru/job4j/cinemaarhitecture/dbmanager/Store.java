@@ -1,5 +1,6 @@
 package ru.job4j.cinemaarhitecture.dbmanager;
 
+import ru.job4j.cinemaarhitecture.error.Err;
 import ru.job4j.cinemaarhitecture.model.Account;
 import ru.job4j.cinemaarhitecture.model.Cell;
 import ru.job4j.cinemaarhitecture.model.Ticket;
@@ -20,9 +21,6 @@ public interface Store {
     //метод будет получать список всех занятых клеток
     public List<Cell> getListCell();
     //при добавлении илета в базу будет произведён коммит
-    public Ticket addTicket(Ticket ticket);
+    public Ticket addTicket(Ticket ticket) throws Err;
     public Account getAccount(Account acoun);
-    //метод будет делать коммит
-    public void commit();
-    public void rollback();
 }

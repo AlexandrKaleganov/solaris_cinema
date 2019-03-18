@@ -1,6 +1,8 @@
 package ru.job4j.cinemaarhitecture.dbmanager;
 
 import org.apache.log4j.Logger;
+import org.codehaus.plexus.logging.LogEnabled;
+import ru.job4j.cinemaarhitecture.error.Err;
 import ru.job4j.cinemaarhitecture.fankinterface.BiConEx;
 import ru.job4j.cinemaarhitecture.fankinterface.FunEx;
 import ru.job4j.cinemaarhitecture.fankinterface.TriplexConEx;
@@ -12,7 +14,7 @@ import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
 
-public class DbStore implements Store {
+public class DbStore implements Store, AutoCloseable {
     private final Map<Class<?>, TriplexConEx<Integer, PreparedStatement, Object>> dispat = new HashMap<>();
     private HashMap<String, ArrayList<String>> map;
     private static final Logger LOGGER = Logger.getLogger(DbStore.class);
@@ -48,10 +50,16 @@ public class DbStore implements Store {
                     k = resultSet.getInt(1);
                 }
             } catch (SQLException e) {
-                LOGGER.error(e.getMessage(), e);
+                throw new SQLException();
             }
             return k;
         }).get();
+    }
+
+    private void updateInfo(String command) {
+        this.db(command, new ArrayList<>(), ps ->
+                ps.executeUpdate()
+        );
     }
 
     /**
@@ -104,10 +112,17 @@ public class DbStore implements Store {
     }
 
     public void deleteAllInfo() {
-        this.rollback();
-        this.updateInfo("delete from purchased_seats", new ArrayList<>());
-        this.updateInfo("delete from accounts", new ArrayList<>());
-        this.commit();
+        try {
+            this.updateInfo("delete from purchased_seats");
+            this.updateInfo("delete from accounts");
+            conn.commit();
+        } catch (Exception e) {
+            try {
+                conn.rollback();
+            } catch (SQLException e1) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
     }
 
     /**
@@ -180,10 +195,26 @@ public class DbStore implements Store {
     }
 
     @Override
-    public Ticket addTicket(Ticket ticket) {
-        this.updateInfo("insert into purchased_seats(accounts_id, halls_id) values()",
-                Arrays.asList(ticket.getAccoun().getId(), ticket.getCell().getId()));
-        this.commit();
+    public Ticket addTicket(Ticket ticket) throws Err {
+        try {
+            ticket.getCell().setId(this.getCellID(ticket.getCell()).getId());
+            ticket.getAccoun().setId(this.addAccount(ticket.getAccoun()).getId());
+            if (!this.isCheckedCell(ticket.getCell())) {
+                this.updateInfo("insert into purchased_seats(accounts_id, halls_id) values(?, ?)",
+                        Arrays.asList(ticket.getAccoun().getId(), ticket.getCell().getId()));
+                conn.commit();
+            } else {
+                this.conn.rollback();
+                throw new Err("место уже занято");
+            }
+        } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException e1) {
+                LOGGER.error(e.getMessage(), e);
+                throw new Err("место уже занято");
+            }
+        }
         return ticket;
     }
 
@@ -201,24 +232,8 @@ public class DbStore implements Store {
     }
 
     @Override
-    public void commit() {
-        try {
-            this.conn.commit();
-        } catch (SQLException e) {
-            try {
-                this.conn.rollback();
-            } catch (SQLException e1) {
-                LOGGER.error(e.getMessage(), e);
-            }
-        }
+    public void close() throws Exception {
+        this.conn.close();
     }
 
-    @Override
-    public void rollback() {
-        try {
-            this.conn.rollback();
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-    }
 }

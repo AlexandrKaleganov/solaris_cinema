@@ -10,6 +10,7 @@ name varchar(200),
 telephone varchar(20)
 );
 create table if not exists purchased_seats(
+id serial primary key,
 accounts_id integer references accounts(id),
-halls_id integer references halls(id) primary key
+halls_id integer references halls(id) not null unique
 );
