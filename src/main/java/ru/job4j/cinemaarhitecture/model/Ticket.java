@@ -6,25 +6,25 @@ import java.util.Objects;
  * модель билет
  */
 public class Ticket {
-    private final Integer cellID;
-    private final Integer accounID;
+    private final Cell cell;
+    private final Account accoun;
 
     @Override
     public String toString() {
-        return "Ticket{" + "cellID=" + cellID + ", accounID=" + accounID + '}';
+        return "Ticket{" + "cellID=" + cell + ", accounID=" + accoun + '}';
     }
 
-    public Ticket(Integer cellID, Integer accounID) {
-        this.accounID = accounID;
-        this.cellID = cellID;
+    public Ticket(Cell cellID, Account accounID) {
+        this.accoun = accounID;
+        this.cell = cellID;
     }
 
-    public Integer getAccounID() {
-        return accounID;
+    public Account getAccoun() {
+        return accoun;
     }
 
-    public Integer getCellID() {
-        return cellID;
+    public Cell getCell() {
+        return cell;
     }
 
     @Override
@@ -36,11 +36,11 @@ public class Ticket {
             return false;
         }
         Ticket ticket = (Ticket) o;
-        return Objects.equals(accounID, ticket.accounID) && Objects.equals(cellID, ticket.cellID);
+        return Objects.equals(accoun, ticket.accoun) && Objects.equals(cell, ticket.cell);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accounID, cellID);
+        return Objects.hash(accoun, cell);
     }
 }

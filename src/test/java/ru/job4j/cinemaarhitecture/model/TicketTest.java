@@ -17,9 +17,9 @@ public class TicketTest {
 
     @Before
     public void singUp() {
-        this.ticket = new Ticket(1, 2);
-        this.ticket2 = new Ticket(1, 2);
-        this.ticket3 = new Ticket(1, 4);
+        this.ticket = new Ticket(new Cell(1, 1, 1), new Account(2, "name", "tell"));
+        this.ticket2 = new Ticket(new Cell(1, 1, 1), new Account(2, "name", "tell"));
+        this.ticket3 = new Ticket(new Cell(2, 1, 1), new Account(2, "name", "tell"));
 
     }
 
@@ -28,18 +28,18 @@ public class TicketTest {
         StringWriter actual = new StringWriter();
         StringWriter expected = new StringWriter();
         actual.write(this.ticket.toString());
-        expected.write("Ticket{cellID=1, accounID=2}");
+        expected.write("Ticket{cellID=Cell{id=1, row=1, place=1}, accounID=Account{id=2, name='name', tel='tell'}}");
         Assert.assertThat(actual.toString(), is(expected.toString()));
     }
 
     @Test
     public void getAccounID() {
-        assertThat(ticket.getAccounID(), is(2));
+        assertThat(ticket.getAccoun().getId(), is(2));
     }
 
     @Test
     public void getCellID() {
-        assertThat(ticket.getCellID(), is(1));
+        assertThat(ticket.getCell().getId(), is(1));
     }
 
     @Test

@@ -19,7 +19,9 @@ public interface Store {
 
     //метод будет получать список всех занятых клеток
     public List<Cell> getListCell();
+    //при добавлении илета в базу будет произведён коммит
     public Ticket addTicket(Ticket ticket);
+    public Account getAccount(Account acoun);
     //метод будет делать коммит
     public void commit();
     public void rollback();

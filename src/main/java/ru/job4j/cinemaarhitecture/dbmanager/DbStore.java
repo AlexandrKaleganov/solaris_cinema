@@ -1,6 +1,5 @@
 package ru.job4j.cinemaarhitecture.dbmanager;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 import ru.job4j.cinemaarhitecture.fankinterface.BiConEx;
 import ru.job4j.cinemaarhitecture.fankinterface.FunEx;
@@ -9,11 +8,7 @@ import ru.job4j.cinemaarhitecture.model.Account;
 import ru.job4j.cinemaarhitecture.model.Cell;
 import ru.job4j.cinemaarhitecture.model.Ticket;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.sql.*;
 import java.util.*;
 
@@ -109,6 +104,7 @@ public class DbStore implements Store {
     }
 
     public void deleteAllInfo() {
+        this.rollback();
         this.updateInfo("delete from purchased_seats", new ArrayList<>());
         this.updateInfo("delete from accounts", new ArrayList<>());
         this.commit();
@@ -122,8 +118,7 @@ public class DbStore implements Store {
      */
     @Override
     public Cell getCellID(Cell cell) {
-        this.rollback();
-        cell.setId(this.isIndex("select from halls where row = ? and  place = ?",
+        cell.setId(this.isIndex("select * from halls where row = ? and  place = ?",
                 Arrays.asList(cell.getRow(), cell.getPlace())));
         return cell;
     }
@@ -137,10 +132,10 @@ public class DbStore implements Store {
      */
     @Override
     public Account addAccount(Account account) {
-        account.setId(this.isIndex("select from account where name=? and tel = ?",
+        account.setId(this.isIndex("select * from accounts where name=? and telephone = ?",
                 Arrays.asList(account.getName(), account.getTel())));
-        if (account.getId() > 0) {
-            account.setId(this.updateInfo("insert into account(name, tel) values (?,?)",
+        if (account.getId() == 0) {
+            account.setId(this.updateInfo("insert into accounts(name, telephone) values (?,?)",
                     Arrays.asList(account.getName(), account.getTel())));
         }
         return account;
@@ -155,7 +150,7 @@ public class DbStore implements Store {
     @Override
     public boolean isCheckedCell(Cell cell) {
         boolean rsl = false;
-        Integer test = this.isIndex("select from purchased_seats where halls_id = ?",
+        Integer test = this.isIndex("select * from purchased_seats where halls_id = ?",
                 Arrays.asList(this.getCellID(cell).getId()));
         if (test > 0) {
             rsl = true;
@@ -170,7 +165,7 @@ public class DbStore implements Store {
      */
     @Override
     public ArrayList<Cell> getListCell() {
-        return this.db("select from halls where id in (select halls_id from purchased_seats)", new ArrayList<>(), ps -> {
+        return this.db("select * from halls where id in (select halls_id from purchased_seats)", new ArrayList<>(), ps -> {
             ArrayList<Cell> rsl = new ArrayList<>();
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -187,9 +182,22 @@ public class DbStore implements Store {
     @Override
     public Ticket addTicket(Ticket ticket) {
         this.updateInfo("insert into purchased_seats(accounts_id, halls_id) values()",
-                Arrays.asList(ticket.getAccounID(), ticket.getCellID()));
+                Arrays.asList(ticket.getAccoun().getId(), ticket.getCell().getId()));
         this.commit();
         return ticket;
+    }
+
+    /**
+     * проверка добавлен пользователь или нет в БД
+     *
+     * @param acoun
+     * @return
+     */
+    @Override
+    public Account getAccount(Account acoun) {
+        acoun.setId(this.isIndex("select * from accounts where name = ? and telephone = ?",
+                Arrays.asList(acoun.getName(), acoun.getTel())));
+        return acoun;
     }
 
     @Override

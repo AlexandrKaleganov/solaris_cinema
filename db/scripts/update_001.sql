@@ -10,6 +10,6 @@ name varchar(200),
 telephone varchar(20)
 );
 create table if not exists purchased_seats(
-accounts_id integer references accounts(id) primary key,
-halls_id integer references halls(id)
+accounts_id integer references accounts(id),
+halls_id integer references halls(id) primary key
 );
