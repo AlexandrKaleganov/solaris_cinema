@@ -8,7 +8,7 @@ import ru.job4j.cinemaarhitecture.model.Ticket;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface Store {
+public interface Store extends AutoCloseable {
     //метод получает id  нужной позиции
     public Cell getCellID(Cell cell) throws Exception;
     //метод добавления аккаунта
@@ -21,4 +21,5 @@ public interface Store {
     //наша транзакция
     public Ticket addTicket(Ticket ticket) throws Err;
     public Account getAccount(Account acoun) throws Exception;
+    public void deleteAllInfo();
 }

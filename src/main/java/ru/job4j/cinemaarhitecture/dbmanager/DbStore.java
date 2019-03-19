@@ -1,7 +1,6 @@
 package ru.job4j.cinemaarhitecture.dbmanager;
 
 import org.apache.log4j.Logger;
-import org.codehaus.plexus.logging.LogEnabled;
 import ru.job4j.cinemaarhitecture.error.Err;
 import ru.job4j.cinemaarhitecture.fankinterface.BiConEx;
 import ru.job4j.cinemaarhitecture.fankinterface.FunEx;
@@ -12,19 +11,23 @@ import ru.job4j.cinemaarhitecture.model.Ticket;
 
 import java.io.InputStream;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.*;
 
-public class DbStore implements Store, AutoCloseable {
+public class DbStore implements Store {
     private final Map<Class<?>, TriplexConEx<Integer, PreparedStatement, Object>> dispat = new HashMap<>();
     private HashMap<String, ArrayList<String>> map;
     private static final Logger LOGGER = Logger.getLogger(DbStore.class);
     private Connection conn;
+    private static final DbStore INSTANCE = new DbStore();
 
     public DbStore() {
         this.init();
         this.dispat.put(Integer.class, (index, ps, value) -> ps.setInt(index, (Integer) value));
         this.dispat.put(String.class, (index, ps, value) -> ps.setString(index, (String) value));
+    }
+
+    public static DbStore getStore() {
+        return INSTANCE;
     }
 
     private void init() {

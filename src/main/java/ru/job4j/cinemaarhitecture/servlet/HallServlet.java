@@ -1,6 +1,41 @@
 package ru.job4j.cinemaarhitecture.servlet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.log4j.Logger;
+import ru.job4j.cinemaarhitecture.dbmanager.Dispatch;
+import ru.job4j.cinemaarhitecture.model.Account;
+import ru.job4j.cinemaarhitecture.model.Cell;
+import ru.job4j.cinemaarhitecture.model.Ticket;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 public class HallServlet extends HttpServlet {
+    private static final org.apache.log4j.Logger LOGGER = Logger.getLogger(HallServlet.class);
+
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doGet(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/json; charset=utf-8");
+        PrintWriter writer = new PrintWriter(resp.getOutputStream());
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            ArrayList<Cell> list = Dispatch.getInstance().access("getListHall",
+                    new Ticket(new Cell(), new Account()), new ArrayList<Cell>());
+            writer.append(mapper.writeValueAsString(list));
+            writer.flush();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
 }

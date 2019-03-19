@@ -23,6 +23,9 @@ public class Cell {
         this.place = place;
     }
 
+    public Cell() {
+    }
+
     public Integer getRow() {
         return row;
     }

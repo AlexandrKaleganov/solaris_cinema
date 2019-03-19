@@ -16,6 +16,9 @@ public class Account {
         this.tel = tel;
     }
 
+    public Account() {
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
