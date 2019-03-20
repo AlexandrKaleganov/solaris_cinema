@@ -4,20 +4,6 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
          http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
-
-    <!--<filter>-->
-        <!--<filter-name>AuthFilter</filter-name>-->
-        <!--<filter-class>ru.job4j.architecture.filtres.AuthFilter</filter-class>-->
-        <!--<init-param>-->
-            <!--<param-name>encoding</param-name>-->
-            <!--<param-value>UTF-8</param-value>-->
-        <!--</init-param>-->
-    <!--</filter>-->
-    <!--<filter-mapping>-->
-        <!--<filter-name>AuthFilter</filter-name>-->
-        <!--<url-pattern>*</url-pattern>-->
-    <!--</filter-mapping>-->
-    <!---->
     <servlet>
         <servlet-name>HallServlet</servlet-name>
         <servlet-class>ru.job4j.cinemaarhitecture.servlet.HallServlet</servlet-class>

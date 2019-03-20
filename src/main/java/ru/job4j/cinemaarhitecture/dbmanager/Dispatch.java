@@ -16,10 +16,11 @@ public class Dispatch {
      * Dispatch.
      */
 
-    private final Map<String, BiFunEx<Store, Ticket, Optional>> dispatch = new HashMap<String, BiFunEx<Store, Ticket, Optional>>();
+    private final Map<String, FunEx<Ticket, Optional>> dispatch = new HashMap<String, FunEx<Ticket, Optional>>();
 
     private final static Dispatch INSTANCE = new Dispatch().init();
     private static final Logger LOGGER = Logger.getLogger(Dispatch.class);
+    private final Valid valid = Validate.getINSTACCE();
 
     public static Dispatch getInstance() {
         return INSTANCE;
@@ -31,10 +32,12 @@ public class Dispatch {
      * @return current object.
      */
     public Dispatch init() {
-        this.dispatch.put("add", (db, ticket) ->
-                Optional.of(db.addTicket(ticket)));
-        this.dispatch.put("getListHall", (db, ticket) ->
-                Optional.of(db.getListCell()));
+        this.dispatch.put("add", (ticket) ->
+                Optional.of(valid.addTicket(ticket)));
+        this.dispatch.put("getListHall", (ticket) ->
+                Optional.of(valid.getListCell()));
+        this.dispatch.put("isChecked", (ticket) ->
+                Optional.of(valid.isCheckedCell(ticket.getCell())));
         return this;
     }
 
@@ -50,12 +53,7 @@ public class Dispatch {
      */
     public <E> E access(String key, Ticket ticket, E param) throws Exception {
         Optional<E> rsl = Optional.empty();
-        try (Store dbstore = new DbStore()) {
-            rsl = this.dispatch.get(key).apply(dbstore, ticket);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new Err("БИлет не куплен");
-        }
+        rsl = this.dispatch.get(key).apply(ticket);
         return rsl.get();
     }
 }
