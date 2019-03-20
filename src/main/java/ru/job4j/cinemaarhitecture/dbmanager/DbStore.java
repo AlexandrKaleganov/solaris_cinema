@@ -36,10 +36,10 @@ public class DbStore implements Store {
             try (InputStream in = DbStore.class.getClassLoader().getResourceAsStream("gradle.properties")) {
                 settings.load(in);
             }
+            Class.forName(settings.getProperty("db.driver"));
             this.conn = DriverManager.getConnection(settings.getProperty("db.host"),
                     settings.getProperty("db.login"), settings.getProperty("db.password"));
             conn.setAutoCommit(false);
-            Class.forName(settings.getProperty("db.driver"));
         } catch (Exception e) {
             e.printStackTrace();
         }
