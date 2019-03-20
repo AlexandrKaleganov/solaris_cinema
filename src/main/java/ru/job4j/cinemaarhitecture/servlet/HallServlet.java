@@ -22,7 +22,7 @@ public class HallServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/json; charset=utf-8");
-
+        System.out.println(req.getParameter("action"));
         PrintWriter writer = new PrintWriter(resp.getOutputStream());
         ObjectMapper mapper = new ObjectMapper();
         try {
