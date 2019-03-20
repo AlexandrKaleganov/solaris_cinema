@@ -21,19 +21,27 @@ public class HallServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+        resp.setContentType("text/json; charset=utf-8");
+
+        PrintWriter writer = new PrintWriter(resp.getOutputStream());
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            ArrayList<Cell> list = Dispatch.getInstance().access(req.getParameter("action"),
+                    new Ticket(new Cell(), new Account()), new ArrayList<Cell>());
+            writer.append(mapper.writeValueAsString(list));
+            writer.flush();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/json; charset=utf-8");
-        PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        ObjectMapper mapper = new ObjectMapper();
+        System.out.println(req.getParameter("place"));
         try {
-            ArrayList<Cell> list = Dispatch.getInstance().access("getListHall",
-                    new Ticket(new Cell(), new Account()), new ArrayList<Cell>());
-            writer.append(mapper.writeValueAsString(list));
-            writer.flush();
+            req.setAttribute("cell", Dispatch.getInstance().access(req.getParameter("action"),
+                    new Ticket(new Cell(), new Account()), new Cell()));
+          req.getRequestDispatcher("/payment.html").forward(req, resp);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }

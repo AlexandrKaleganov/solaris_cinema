@@ -25,9 +25,17 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>HallServlet</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/hall</url-pattern>
     </servlet-mapping>
-
+    <servlet>
+        <servlet-name>AccountServlet</servlet-name>
+        <servlet-class>ru.job4j.cinemaarhitecture.servlet.AccountServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AccountServlet</servlet-name>
+        <url-pattern>/account</url-pattern>
+    </servlet-mapping>
 
 
 </web-app>
