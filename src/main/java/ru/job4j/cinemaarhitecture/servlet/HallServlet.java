@@ -11,6 +11,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -22,12 +24,12 @@ public class HallServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/json; charset=utf-8");
-        System.out.println(req.getParameter("action"));
         PrintWriter writer = new PrintWriter(resp.getOutputStream());
         ObjectMapper mapper = new ObjectMapper();
         try {
             ArrayList<Cell> list = Dispatch.getInstance().access(req.getParameter("action"),
                     new Ticket(new Cell(), new Account()), new ArrayList<Cell>());
+            System.out.println(list);
             writer.append(mapper.writeValueAsString(list));
             writer.flush();
         } catch (Exception e) {
@@ -37,11 +39,17 @@ public class HallServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println(req.getParameter("place"));
+        HttpSession session = req.getSession();
+        ObjectMapper mapper = new ObjectMapper();
+        String temp;
         try {
-            req.setAttribute("cell", Dispatch.getInstance().access(req.getParameter("action"),
-                    new Ticket(new Cell(), new Account()), new Cell()));
-          req.getRequestDispatcher("/payment.html").forward(req, resp);
+            if ((temp = req.getReader().readLine()) != null) {
+                Cell cel = mapper.readValue(temp, Cell.class);
+                session.setAttribute("cell", cel);
+            } else {
+                session.invalidate();
+                req.getRequestDispatcher("/index.html").forward(req, resp);
+            }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
