@@ -1,64 +1,85 @@
-// $(document).ready((function () {
-//     $.ajax({
-//         type: "GET",
-//         url: "./hall",
-//         data: {action: "getListHall"},
-//         success: function (data) {
-//             var tr = document.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
-//             console.log(data);
-//             for (var i = 0; i < data.length; i++) {
-//                 for (j = 0; j < tr.length; j++) {
-//                     if (data[i].row == tr[j].getElementsByTagName("th")[0].textContent) {
-//                         console.log(tr[j].getElementsByTagName("th")[0].textContent + " ряд найден");
-//                         var input = tr[j].querySelector('td input[value="' + data[i].place + '"]');
-//                         input.parentElement.style.backgroundColor = "red";
-//                     }
-//                 }
-//             }
-//         }
-//     })
-// }));
-// function add() {
-//     var input = document.querySelector('td input[name="place"]:checked');
-//     if (input.parentElement.style.backgroundColor == "red") {
-//         alert(input.parentElement.textContent + " занято");
-//         return false;
-//     } else {
-//         var th = input.parentElement.parentElement.getElementsByTagName("th")[0];
-//         console.log(th.textContent);
-//
-//         $.ajax({
-//             type: "POST",
-//             url: "./hall",
-//             data: JSON.stringify({id: "0", row: th.textContent, place: input.value}),
-//             success: function (data) {
-//                 window.location.href = "./payment.html";
-//             }
-//         })
-//         return true;
-//     }
-// };
-//попытка найти все инпуты, нашёл только ячейки, что дальше делать не знаю как обратиться к элеметам
-//не могу понять как пометить что они уже заняты?
-// $(document).ready(function () {
-//     var tbody = document.getElementsByTagName("tbody")[0];
-//     var tr = tbody.getElementsByTagName("tr");
-//
-//     // console.log(document.getElementsByName())
-//     for (var i = 0; i < tr.length; i++) {
-//         if (tr[i].getElementsByTagName("th")[0].textContent == "1") {
-//             console.log(tr[i].getElementsByTagName("th")[0].textContent);
-//             var td = tr[i].getElementsByTagName("td");
-//             // var  td1 = tr[i].getElementsByClassName("1");
-//             // td1.style.backgroundColor = "red";
-//             for (j = 0; j < td.length; j++) {
-//                 td[j].style.backgroundColor = "red";
-//                 console.log(td[j]);   // вот тут вижу нужные ячейки а что с ними делать вот даже значение инпута не получается проверить
-//             }
-//             console.log(tr[i].getElementsByClassName('td[class="1"]')[0]);
-//
-//         }
-//     }
-// });
+/**
+ * обновление информаци один раз в секунду
+ * если массив с занятыи местами придёт пустой, до зал будет очищен
+ */
+$(updateHall());
+setInterval(updateHall, 1000);
+
+function updateHall() {
+    $.ajax({
+        type: "GET",
+        url: "./hall",
+        data: {action: "getListHall"},
+        success: function (data) {
+            var tr = document.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+            if (data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    for (j = 0; j < tr.length; j++) {
+                        if (data[i].row == tr[j].getElementsByTagName("th")[0].textContent) {
+                            var input = tr[j].querySelector('td input[value="' + data[i].place + '"]');
+                            input.parentElement.style.backgroundColor = "red";
+                        }
+                    }
+                }
+            } else {
+                var td = $('td');
+                for (i = 0; i < td.length; i++) {
+                    if (td[i].style.backgroundColor == "red") {
+                        td[i].style.backgroundColor = "";
+                    }
+                }
+            }
+        }
+    })
+}
+
+/**
+ * добавление места
+ * @returns {boolean}
+ */
+function add() {
+    var input = document.querySelector('td input[name="place"]:checked');
+    if (valid(input)) {
+        if (input.parentElement.style.backgroundColor == "red") {
+            alert(input.parentElement.textContent + " занято");
+            return false;
+        } else {
+            var th = input.parentElement.parentElement.getElementsByTagName("th")[0];
+            $.ajax({
+                type: "POST",
+                url: "./hall",
+                data: JSON.stringify({id: "0", row: th.textContent, place: input.value}),
+                success: function (data) {
+                    window.location.href = "./payment.html";
+                }
+            })
+        }
+    } else {
+        alert("Выберете место");
+    }
+}
+
+/**
+ * проверка выбрано ли место
+ * @param input
+ * @returns {boolean}
+ */
+function valid(input) {
+    if (input == null) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * очистка зала
+ */
+function sclear() {
+    $.ajax({
+        type: "POST",
+        url: "./clear"
+    });
+    updateHall()
+}
 
 
