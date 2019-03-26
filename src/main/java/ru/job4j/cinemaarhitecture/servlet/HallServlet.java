@@ -29,7 +29,6 @@ public class HallServlet extends HttpServlet {
         try {
             ArrayList<Cell> list = Dispatch.getInstance().access(req.getParameter("action"),
                     new Ticket(new Cell(), new Account()), new ArrayList<Cell>());
-            System.out.println(list);
             writer.append(mapper.writeValueAsString(list));
             writer.flush();
         } catch (Exception e) {
