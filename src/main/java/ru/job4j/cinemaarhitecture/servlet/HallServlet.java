@@ -43,13 +43,8 @@ public class HallServlet extends HttpServlet {
         ObjectMapper mapper = new ObjectMapper();
         String temp;
         try {
-            if ((temp = req.getReader().readLine()) != null) {
-                Cell cel = mapper.readValue(temp, Cell.class);
-                session.setAttribute("cell", cel);
-            } else {
-                session.invalidate();
-                req.getRequestDispatcher("/index.html").forward(req, resp);
-            }
+            Cell cel = mapper.readValue(req.getReader().readLine(), Cell.class);
+            session.setAttribute("cell", cel);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
