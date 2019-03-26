@@ -22,6 +22,15 @@
         <servlet-name>AccountServlet</servlet-name>
         <url-pattern>/account</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ClearServlet</servlet-name>
+        <servlet-class>ru.job4j.cinemaarhitecture.servlet.ClearServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ClearServlet</servlet-name>
+        <url-pattern>/clear</url-pattern>
+    </servlet-mapping>
 
 
 </web-app>

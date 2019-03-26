@@ -38,6 +38,10 @@ public class Dispatch {
                 Optional.of(valid.getListCell()));
         this.dispatch.put("isChecked", (ticket) ->
                 Optional.of(valid.isCheckedCell(ticket.getCell())));
+        this.dispatch.put("clear", (ticket) -> {
+            this.valid.deleteAll();
+            return Optional.of(true);
+        });
         return this;
     }
 
