@@ -4,20 +4,17 @@
  */
 function account() {
     var result = false;
-    var name =$("#username").val();
+    var name = $("#username").val();
     var phone = $("#phone").val();
     if (!(testName(name) + testPhone(phone))) {
-        console.log("Всё работает");
         $.ajax({
             type: "POST",
             url: "./account",
             data: JSON.stringify({id: "0", name: name, tel: phone}),
             success: function (data) {
-                console.log(data);
-                // for (var i = 0; i < data.length; i++) {
-                //     console.log(data[i]);
-                //     window.location.href = path.concat("payment.html");
-                // }
+                if (data.row != undefined) {
+                    alert("Ряд=" + data.row + " Место=" + data.place + " не удалось купить билет");
+                }
                 window.location.href = "./index.html";
             }
         })

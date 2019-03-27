@@ -40,7 +40,6 @@ public class HallServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         ObjectMapper mapper = new ObjectMapper();
-        String temp;
         try {
             Cell cel = mapper.readValue(req.getReader().readLine(), Cell.class);
             session.setAttribute("cell", cel);

@@ -69,6 +69,6 @@ public class Cell {
 
     @Override
     public String toString() {
-        return "Cell{" + "id=" + id + ", row=" + row + ", place=" + place + '}';
+        return "Cell{" + "id=" + id + ", Мето=" + row + ", place=" + place + '}';
     }
 }
