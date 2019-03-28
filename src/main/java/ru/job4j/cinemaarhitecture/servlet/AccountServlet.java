@@ -30,7 +30,7 @@ public class AccountServlet extends HttpServlet {
         PrintWriter writer = new PrintWriter(resp.getOutputStream());
         try {
             if (session.getAttribute("cell") != null) {
-                session.setAttribute("account", mapper.readValue(req.getReader().readLine().toString(), Account.class));
+                session.setAttribute("account", mapper.readValue(req.getReader().readLine(), Account.class));
                 Dispatch.getInstance().access("add", new Ticket((Cell) session.getAttribute("cell"),
                         (Account) session.getAttribute("account")), new Ticket(new Cell(), new Account()));
             }
