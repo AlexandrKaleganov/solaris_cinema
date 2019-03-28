@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ *
+ */
 public class ClearServlet extends HttpServlet {
     private static final org.apache.log4j.Logger LOGGER = Logger.getLogger(ClearServlet.class);
 
@@ -25,7 +28,7 @@ public class ClearServlet extends HttpServlet {
         try {
             Dispatch.getInstance().access("clear", new Ticket(new Cell(), new Account()), true);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.info(e.getMessage(), e);
         }
     }
 }

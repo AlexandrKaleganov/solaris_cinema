@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 public class HallServlet extends HttpServlet {
@@ -39,10 +40,8 @@ public class HallServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            Cell cel = mapper.readValue(req.getReader().readLine(), Cell.class);
-            session.setAttribute("cell", cel);
+            session.setAttribute("cell", new ObjectMapper().readValue(req.getReader().readLine(), Cell.class));
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }

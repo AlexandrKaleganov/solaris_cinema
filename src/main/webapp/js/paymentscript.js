@@ -1,3 +1,16 @@
+
+$(document).ready(function () {
+    $.ajax({
+        type:"GET",
+        url:"./account",
+        success: function (data) {
+            var div = document.querySelector('div [class="row pt-3"]');
+            $('.pt-3').after("<h3> "+
+                "            Вы выбрали ряд " + data.row +  " место " + data.place + ", Сумма : 500 рублей." +
+                "    </h3>");
+        }
+    })
+});
 /**
  * функция добавления аккаунта
  * @returns {boolean}

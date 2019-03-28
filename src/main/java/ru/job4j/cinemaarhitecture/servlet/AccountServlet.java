@@ -15,12 +15,25 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * сервлет обслуживает запросы, которые приходят с  paymentscript.js
+ * гет запрос получает данные из сессии решин не делать лишние запросы в бд, хотя всё можно прикрутить к примеру если стоимость билета
+ * на место разная , указывать цену за билет
+ * и подгружать стоимость белета
+ *
+ * пост запрос добавлеет данные в базу если выскакивает исключение то формируется респонс в формате JSON
+ * и сессия убивается в любом случае в блоке finally
+ */
 public class AccountServlet extends HttpServlet {
     private static final org.apache.log4j.Logger LOGGER = Logger.getLogger(AccountServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+        resp.setContentType("text/json; charset=utf-8");
+        PrintWriter writer = new PrintWriter(resp.getOutputStream());
+        ObjectMapper maper = new ObjectMapper();
+        writer.append(maper.writeValueAsString(req.getSession().getAttribute("cell")));
+        writer.flush();
     }
 
     @Override
@@ -36,7 +49,7 @@ public class AccountServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setContentType("text/json; charset=utf-8");
-            writer.append(mapper.writeValueAsString((Cell) req.getSession().getAttribute("cell")));
+            writer.append(mapper.writeValueAsString(req.getSession().getAttribute("cell")));
             writer.flush();
             LOGGER.info(e.getMessage(), e);
         } finally {

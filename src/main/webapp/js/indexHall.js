@@ -77,7 +77,9 @@ function valid(input) {
 function sclear() {
     $.ajax({
         type: "POST",
-        url: "./clear"
+        url: "./clear",
+        data: {act:"clear"},
+        dataType : "text"
     });
     updateHall()
 }
