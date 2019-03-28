@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- *
+ * сервлет отвечающий за очистку зала
  */
 public class ClearServlet extends HttpServlet {
     private static final org.apache.log4j.Logger LOGGER = Logger.getLogger(ClearServlet.class);
