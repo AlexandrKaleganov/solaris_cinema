@@ -12,9 +12,9 @@ before_install:
 
 # после выполнения сборки запустить скрипт, который будет собирать статистику по JaCoCo
 # Здесь используется сторонни сервис https://codecov.io/
-#env:
-#  global:
-#  - CODECOV_TOKEN=""
+env:
+  global:
+  - CODECOV_TOKEN="d7a5e3be-324e-4be9-9fba-78db0b51da42"
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
@@ -22,6 +22,6 @@ after_success:
 notifications:
   email:
     recipients:
-      -alexmur07@mail.ru
+      - alexmur07@mail.ru
     on_success: never # default: change
     on_failure: always # default: always
