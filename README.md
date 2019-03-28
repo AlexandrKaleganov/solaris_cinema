@@ -6,7 +6,7 @@
 В этом задании вам нужно разработать простой веб сайт по покупки билетов в кинотеатр.
 Начальная страница сайта index.html. 
 **На ней мы показываем Зал c рядами.
-//скриншёты изменю после выполнения задания** 
+В курсе производилась работа с ветках git.
 
 ![Alt text](https://github.com/AlexandrKaleganov/solaris_cinema/blob/master/img/1.png "Optional Title")
 ![Alt text](https://github.com/AlexandrKaleganov/solaris_cinema/blob/master/img/2.png "Optional Title")
