@@ -40,7 +40,7 @@ public class AccountTest {
 
     @Test
     public void hashCodee() {
-        assertThat(account.hashCode() == account2.hashCode(), is(true));
+        assertThat(account.hashCode() == account2.hashCode(), is(false));
         assertThat(account.hashCode() == account3.hashCode(), is(true));
 
     }
