@@ -8,6 +8,7 @@
 **На ней мы показываем Зал c рядами.
 Объединение зафиксированных изменений
 //скриншёты изменю после выполнения задания** 
+В курсе производилась работа с ветках git.
 
 ![Alt text](https://github.com/AlexandrKaleganov/solaris_cinema/blob/master/img/1.png "Optional Title")
 ![Alt text](https://github.com/AlexandrKaleganov/solaris_cinema/blob/master/img/2.png "Optional Title")
