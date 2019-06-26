@@ -18,6 +18,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <title>Hello, world!</title>
     <script src="js/indexHall.js"></script>
+    <script src="js/index.js"></script>
 </head>
 <body>
 
@@ -62,6 +63,14 @@
     </div>
     <div class="row float-left">
         <button type="button" class="btn btn-success" onclick="sclear()">Очистка зала</button>
+    </div>
+    <br/>
+    <div id="imageupload">
+        <form id="sampleUploadFrm" enctype="multipart/form-data" method="post">
+            <p> <input id="descrPhoto" type="text" name="description" />
+                <input id="filePhoto" type="file" name="file" />
+                <input type="button" value="Отправить" onclick="fileupload()"></p>
+        </form>
     </div>
 </div>
 </body>

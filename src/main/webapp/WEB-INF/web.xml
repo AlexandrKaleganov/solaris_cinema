@@ -32,5 +32,13 @@
         <url-pattern>/clear</url-pattern>
     </servlet-mapping>
 
-
+    <servlet>
+        <servlet-name>FileUploadServlet</servlet-name>
+        <servlet-class>ru.job4j.cinemaarhitecture.servlet.FileUploadServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FileUploadServlet</servlet-name>
+        <url-pattern>/upload</url-pattern>
+    </servlet-mapping>
 </web-app>
