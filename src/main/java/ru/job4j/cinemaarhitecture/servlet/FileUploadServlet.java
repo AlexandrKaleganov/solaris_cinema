@@ -36,6 +36,7 @@ public class FileUploadServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final String UPLOAD_DIRECTORY = "d:/uploads";
 
+        System.out.println(req.getHeaderNames());
         if (ServletFileUpload.isMultipartContent(req)) {
             try {
                 List<FileItem> multiparts = new ServletFileUpload(
