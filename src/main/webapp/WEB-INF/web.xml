@@ -4,33 +4,94 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
          http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
+<!--Start filtres-->
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>ru.akaleganov.filter.AuthFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping>
+<!--    End filtres-->
+    <!--Servler authoris-->
     <servlet>
-        <servlet-name>HallServlet</servlet-name>
-        <servlet-class>ru.job4j.cinemaarhitecture.servlet.HallServlet</servlet-class>
+        <servlet-name>SigninServlet</servlet-name>
+        <servlet-class>ru.akaleganov.container.SigninServlet</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>HallServlet</servlet-name>
-        <url-pattern>/hall</url-pattern>
+        <servlet-name>SigninServlet</servlet-name>
+        <url-pattern>/signin</url-pattern>
     </servlet-mapping>
+    <!--    Servlet Index.jsp-->
     <servlet>
-        <servlet-name>AccountServlet</servlet-name>
-        <servlet-class>ru.job4j.cinemaarhitecture.servlet.AccountServlet</servlet-class>
+        <servlet-name>ServletIndex</servlet-name>
+        <servlet-class>ru.akaleganov.container.ServletIndex</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>AccountServlet</servlet-name>
-        <url-pattern>/account</url-pattern>
+        <servlet-name>ServletIndex</servlet-name>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>ClearServlet</servlet-name>
-        <servlet-class>ru.job4j.cinemaarhitecture.servlet.ClearServlet</servlet-class>
+        <servlet-name>ServletUserList</servlet-name>
+        <servlet-class>ru.akaleganov.container.users.ServletUserList</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>ClearServlet</servlet-name>
-        <url-pattern>/clear</url-pattern>
+        <servlet-name>ServletUserList</servlet-name>
+        <url-pattern>/listUser</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ServletRoles</servlet-name>
+        <servlet-class>ru.akaleganov.container.users.ServletRoles</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ServletRoles</servlet-name>
+        <url-pattern>/listRoles</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ImajeServlet</servlet-name>
+        <servlet-class>ru.akaleganov.container.ImajeServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ImajeServlet</servlet-name>
+        <url-pattern>/image</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ServletMarkaload</servlet-name>
+        <servlet-class>ru.akaleganov.container.car.ServletMarkaload</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ServletMarkaload</servlet-name>
+        <url-pattern>/markaload</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>TransmissionServlet</servlet-name>
+        <servlet-class>ru.akaleganov.container.car.TransmissionServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TransmissionServlet</servlet-name>
+        <url-pattern>/transmission</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>FileUploadServlet</servlet-name>
+        <servlet-class>ru.akaleganov.container.FileUploadServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FileUploadServlet</servlet-name>
+        <url-pattern>/upload</url-pattern>
+    </servlet-mapping>
 
 </web-app>

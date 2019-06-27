@@ -28,7 +28,7 @@ function account() {
                 if (data.row != undefined) {
                     alert("Ряд=" + data.row + " Место=" + data.place + " не удалось купить билет");
                 }
-                window.location.href = "./index.html";
+                window.location.href = "../12.html";
             }
         })
     }
